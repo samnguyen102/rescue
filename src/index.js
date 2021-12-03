@@ -39,6 +39,7 @@ import { Firestore, Auth, App } from 'contexts'
 import { useAuth } from 'hooks'
 import { FIREBASE_CONFIG, SENTRY_DSN, SENTRY_ENV } from 'helpers'
 import './styles/index.scss'
+import { ForecastedMonthlyPounds } from 'components/AnalyticsSnapshot/ForecastedMonthlyPounds'
 
 Sentry.init({
   dsn: SENTRY_DSN,
@@ -103,6 +104,10 @@ function RescueAppRoutes() {
                 {/* Public Routes */}
                 <PublicRoute exact path="/">
                   <Home />
+                </PublicRoute>
+                <PublicRoute exact path="/ForecastedMonthlyPounds">
+                  {' '}
+                  <ForecastedMonthlyPounds />{' '}
                 </PublicRoute>
                 <PublicRoute exact path="/profile">
                   <Profile />

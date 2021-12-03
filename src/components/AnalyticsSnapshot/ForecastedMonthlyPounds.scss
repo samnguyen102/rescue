@@ -1,0 +1,34 @@
+#ForecastedMonthlyPounds {
+  @include page;
+
+  #Content {
+    position: relative;
+    background: #ffffff;
+    box-sizing: border-box;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    padding: 3%;
+    justify-content: space-between;
+    align-items: center;
+    Input {
+      display: flex;
+
+      #growthRate {
+        display: none;
+        width: 96px;
+        height: 48px;
+        font-size: 18px;
+        font-weight: 900;
+        background: var(--white);
+        color: var(--black);
+        display: flex;
+        justify-content: center;
+        border-radius: 8px;
+        align-items: center;
+        text-align: center;
+        margin: 0 8px;
+        border: 0;
+      }
+    }
+  }
+}
