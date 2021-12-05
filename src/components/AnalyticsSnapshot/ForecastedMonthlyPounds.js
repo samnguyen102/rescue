@@ -1,138 +1,102 @@
-import { Text, Button, Spacer } from '@sharingexcess/designsystem'
+import { Text, Button } from '@sharingexcess/designsystem'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useFirestore } from 'hooks'
 import { Input } from 'components'
 
 export function ForecastedMonthlyPounds() {
-  const [totalDelivery, setTotalDelivery] = useState(0)
-  const [currentMonth, setCurrentMonth] = useState(new Date().getMonth())
-  const [annualGoal, setAnnualGoal] = useState(0)
   const [growthRate, setGrowthRate] = useState(0)
-  const [years, setYears] = useState([])
-  const [lastMonth, setLastMonth] = useState(new Date().getMonth() - 1)
-  const [currentYear, setCurrentYear] = useState(
-    new Date().getFullYear() + 1900
-  )
+  const [annualGoal, setAnnualGoal] = useState(0)
+  const [currentMonth, setCurrentMonth] = useState(new Date().getMonth())
 
-  const deliveries = useFirestore(
+  const [currentYear, setCurrentYear] = useState(new Date().getYear() + 1900)
+  const [lastMonth, setLastMonth] = useState(new Date().getMonth() - 1)
+  const [monthlyForecaset, setMonthlyForecast] = useState(0)
+  const [annualForecast, setannualForecast] = useState(0)
+
+  function handleGrowthChange(e) {
+    setGrowthRate(parseInt(e.target.value))
+  }
+  function handleAnnualChange(e) {
+    setAnnualGoal(parseInt(e.target.value))
+  }
+
+  const annualDeliveries = useFirestore(
     'deliveries',
     useCallback(
       d => {
-        if (lastMonth) {
-          if (d.status === 9) {
-            const deliveryDate =
-              d.time_finished && d.time_finished.toDate
-                ? d.time_finished.toDate()
-                : new Date(d.time_finished)
-            return deliveryDate.getMonth() === lastMonth
-          } else return false
-        } else {
-          if (d.status === 9) {
-            const deliveryDate =
-              d.time_finished && d.time_finished.toDate
-                ? d.time_finished.toDate()
-                : new Date(d.time_finished)
+        if (d.status === 9) {
+          const deliveryDate =
+            d.time_finished && d.time_finished.toDate
+              ? d.time_finished.toDate()
+              : new Date(d.time_finished)
+
+          if (currentYear) {
             return deliveryDate.getYear() + 1900 === currentYear
-          } else return false
+          }
         }
       },
-      [lastMonth, currentYear]
+      [currentYear]
     )
   )
-
-  const pickups = useFirestore(
-    'pickups',
+  const lastMonthDeliveries = useFirestore(
+    'deliveries',
     useCallback(
-      p => {
-        if (lastMonth) {
-          if (p.status === 9) {
-            const pickupDate =
-              p.time_finished && p.time_finished.toDate
-                ? p.time_finished.toDate()
-                : new Date(p.time_finished)
-            return pickupDate.getMonth() === lastMonth
-          } else return false
-        } else {
-          if (p.status === 9) {
-            const pickupDate =
-              p.time_finished && p.time_finished.toDate
-                ? p.time_finished.toDate()
-                : new Date(p.time_finished)
-            return pickupDate.getYear() + 1900 === currentYear
-          } else return false
+      d => {
+        if (d.status === 9) {
+          const deliveryDate =
+            d.time_finished && d.time_finished.toDate
+              ? d.time_finished.toDate()
+              : new Date(d.time_finished)
+
+          return deliveryDate.getMonth() === lastMonth
         }
       },
-      [lastMonth, currentYear]
+      [lastMonth]
     )
   )
 
-  useEffect(() => {
-    function generateTotalWeight(a, type, length) {
-      if (length <= 0) return 0
-      return (
-        generateTotalWeight(a, type, length - 1) + a[length - 1].report[type]
-      )
-    }
-    if (lastMonth) {
-      if (deliveries.length)
-        setTotalDelivery(
-          generateTotalWeight(deliveries, 'weight', deliveries.length)
-        )
-      else {
-        setTotalDelivery(0)
-      }
-    } else {
-      if (deliveries.length)
-        setTotalDelivery(
-          generateTotalWeight(deliveries, 'weight', deliveries.length)
-        )
-      else {
-        setTotalDelivery(0)
-      }
-    }
-  }, [deliveries, lastMonth])
-
-  const monthChange = e => {
-    setCurrentMonth(parseInt(e.target.value))
-  }
-
-  const yearChange = e => {
-    setCurrentYear(years[parseInt(e.target.value)])
+  function handleCalculateForecast() {
+    const calculateMonthly = growthRate * 0.01 * lastMonthDeliveries
+    setMonthlyForecast(calculateMonthly)
+    console.log('monthly', calculateMonthly)
+    const calculateAnnual = (monthlyForecaset / annualDeliveries) * 100
+    setannualForecast(calculateAnnual)
+    console.log('annual', calculateAnnual)
   }
 
   return (
     <main id="ForecastedMonthlyPounds">
       <section id="container">
         <section id="Content">
-          <section id="InputForecast">
-            <text type="small" color="grey-dark">
-              Forecasted Number of Pounds per Month
-            </text>
-            <Input
-              type="number"
-              label="Input Growth Rate (%)"
-              value={growthRate}
-              onChange={e => setGrowthRate(e.target.value)}
-            />
-          </section>
-          <section id="InputAnnual">
-            <text type="small" color="grey-dark">
-              Annual Goal{' '}
-            </text>
-            <Input
-              type="number"
-              label="Input Annual Goal"
-              value={annualGoal}
-              onChange={e => setAnnualGoal(e.target.value)}
-            />
-          </section>
+          <Input
+            type="tel"
+            value={growthRate}
+            onChange={handleGrowthChange}
+            label="Input Growth Rate (%)"
+          ></Input>
+          console.log('growthRate', growthRate)
+          <Input
+            type="tel"
+            value={annualGoal}
+            onChange={handleAnnualChange}
+            label="Input Annual Goal (lbs)"
+          ></Input>
+          console.log('annualGoal', annualGoal)
+          <Button
+            type="primary"
+            color="green"
+            size="large"
+            handler={handleCalculateForecast}
+          >
+            Calculate
+          </Button>
           <Text
             id="PercentToAnnual"
             type="secondary-header"
             color="green"
             align="center"
           >
-            80%
+            {annualForecast ? annualForecast : '0'}%
           </Text>
           <Text
             id="PercentToAnnualLabel"
@@ -141,6 +105,22 @@ export function ForecastedMonthlyPounds() {
             align="center"
           >
             To Annual Goal
+          </Text>
+          <Text
+            id="PercentMonthly"
+            type="secondary-header"
+            color="green"
+            align="center"
+          >
+            {monthlyForecaset ? monthlyForecaset : '0'} lbs
+          </Text>
+          <Text
+            id="PercentMonthlyLabel"
+            type="small"
+            color="black"
+            align="center"
+          >
+            in {currentMonth}
           </Text>
         </section>
       </section>
