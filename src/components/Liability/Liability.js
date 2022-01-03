@@ -145,7 +145,7 @@ export function Liability() {
 
       {user && user.completed_liability_release ? (
         <Link to="/">
-          <Button size="small">Back to Home</Button>
+          <Button size="medium">Back to Home</Button>
         </Link>
       ) : null}
     </main>
