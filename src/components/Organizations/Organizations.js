@@ -9,6 +9,7 @@ import {
   FlexContainer,
   Spacer,
   Text,
+  Dropdown,
 } from '@sharingexcess/designsystem'
 import { Emoji } from 'react-apple-emojis'
 import { useHistory } from 'react-router'
@@ -45,6 +46,14 @@ export function Organizations() {
   if (!organizations.length) return <Loading text="Loading organizations" />
   return (
     <main id="Organizations">
+      <Dropdown
+        value="Hello World"
+        onChange={handleSearch}
+        options={[
+          { label: 'option1', value: 1 },
+          { label: 'option2', value: 2 },
+        ]}
+      />
       <section id="Filters">
         <select value={filter} onChange={e => setFilter(e.target.value)}>
           <option value="">Filter by type...</option>
