@@ -11,6 +11,7 @@ import {
   Spacer,
   Text,
   Image,
+  Dropdown,
 } from '@sharingexcess/designsystem'
 import { formatTimestamp, STATUSES } from 'helpers'
 import { Emoji } from 'react-apple-emojis'
@@ -305,30 +306,30 @@ export function Rescues() {
       </Text>
       <Spacer height={32} />
       <section id="Filters">
-        <select
-          name="filters"
-          value={filter}
-          onChange={e => setFilter(e.target.value)}
-        >
-          {admin === true ? (
-            <>
-              <option value="active">Active Rescues&nbsp;&nbsp;&nbsp;⬇️</option>
-            </>
-          ) : null}
-          <option value="mine">My Rescues&nbsp;&nbsp;&nbsp;⬇️</option>
-          <option value="past">Past Rescues&nbsp;&nbsp;&nbsp;⬇️</option>
-          <option value="unassigned">
-            Available Rescues&nbsp;&nbsp;&nbsp;⬇️
-          </option>
-          {admin === true ? (
-            <option value="driver">
-              Rescues by Driver&nbsp;&nbsp;&nbsp;⬇️
-            </option>
-          ) : null}
-          {admin === true ? (
-            <option value="date">Rescues by Date&nbsp;&nbsp;&nbsp;⬇️</option>
-          ) : null}
-        </select>
+        {admin === true ? (
+          <Dropdown
+            value={filter}
+            onChange={e => setFilter(e.target.value)}
+            options={[
+              { label: 'Active Rescue', value: 'active' },
+              { label: 'My Rescue', value: 'mine' },
+              { label: 'Past Rescue', value: 'past' },
+              { label: 'Available Rescues', value: 'unassigned' },
+              { label: 'Rescue by Driver', value: 'driver' },
+              { label: 'Rescue by Date', value: 'date' },
+            ]}
+          />
+        ) : (
+          <Dropdown
+            value={filter}
+            onChange={e => setFilter(e.target.value)}
+            options={[
+              { label: 'My Rescue', value: 'mine' },
+              { label: 'Past Rescue', value: 'past' },
+              { label: 'Available Rescues', value: 'unassigned' },
+            ]}
+          />
+        )}
       </section>
       {filterByDriver ? (
         <Input
