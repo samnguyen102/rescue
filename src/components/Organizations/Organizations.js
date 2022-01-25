@@ -46,23 +46,17 @@ export function Organizations() {
   if (!organizations.length) return <Loading text="Loading organizations" />
   return (
     <main id="Organizations">
-      <Dropdown
-        value="Hello World"
-        onChange={handleSearch}
-        options={[
-          { label: 'option1', value: 1 },
-          { label: 'option2', value: 2 },
-        ]}
-      />
       <section id="Filters">
-        <select value={filter} onChange={e => setFilter(e.target.value)}>
-          <option value="">Filter by type...</option>
-          <option value="recipient">
-            Recipients&nbsp;&nbsp;&nbsp;&nbsp;⬇️
-          </option>
-          <option value="donor">Donors&nbsp;&nbsp;&nbsp;&nbsp;⬇️</option>
-          <option value="all">All&nbsp;&nbsp;&nbsp;&nbsp;⬇️</option>
-        </select>
+        <Dropdown
+          value={filter}
+          onChange={e => setFilter(e.target.value)}
+          options={[
+            { label: 'Filter by type...', value: '' },
+            { label: 'Recipients', value: 'recipient' },
+            { label: 'Donors', value: 'donor' },
+            { label: 'All', value: 'all' },
+          ]}
+        />
         <Link to="/admin/create-organization">
           <Button type="secondary" color="white">
             + New
