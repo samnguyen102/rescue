@@ -84,6 +84,11 @@ export function EditLocation() {
   function handleReceiveAddress(address) {
     setFormData(prevData => ({ ...prevData, ...address }))
   }
+
+  function addRowOfHours() {
+    console.log('hi')
+  }
+
   return !location || !organization ? (
     <Loading text="Loading location data..." />
   ) : (
@@ -162,6 +167,12 @@ export function EditLocation() {
             value={formData.nickname}
             onChange={handleChange}
           />
+          <div id="HoursOpen">
+            <Button type="primary" handler={addRowOfHours}>
+              {' '}
+              Add Hours
+            </Button>
+          </div>
           <div className="is_philabundance_partner">
             <input
               type="checkbox"
