@@ -154,7 +154,11 @@ export function EditLocation() {
       setFormData({
         ...formData,
         hours: formData.hours.map((hour, index) =>
-          index === alter ? { ...hour, [e.target.id]: e.target.value } : hour
+          index === alter
+            ? e.target.id === 'day_of_week'
+              ? { ...hour, [e.target.id]: DAYS.indexOf(e.target.value) }
+              : { ...hour, [e.target.id]: e.target.value }
+            : hour
         ),
       })
     } else {
