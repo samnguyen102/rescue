@@ -64,11 +64,7 @@ function Auth({ children }) {
           user: auth_user ? { ...auth_user, ...db_user } : null,
           admin: db_user && db_user.is_admin,
           driver: db_user && db_user.is_driver && !db_user.is_admin,
-          permission: db_user
-            ? !db_user.is_admin && !db_user.is_driver
-              ? null
-              : db_user.is_driver
-            : null,
+          permission: db_user && (db_user.is_admin || db_user.is_driver),
           handleLogout,
           handleLogin,
         }}

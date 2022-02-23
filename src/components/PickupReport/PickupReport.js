@@ -64,7 +64,10 @@ export function PickupReport({ customSubmitHandler }) {
         ...formData,
         status: STATUSES.COMPLETED,
         timestamp_updated: createTimestamp(),
-        timestamp_logged_finish: createTimestamp(),
+        timestamp_logged_finish:
+          pickup && pickup.timestamp_logged_finish
+            ? pickup.timestamp_logged_finish
+            : createTimestamp(),
       }).then(() => setWorking(false))
     }
   }, [working, pickup, formData, pickup_id, changed])
@@ -262,6 +265,16 @@ export function PickupReport({ customSubmitHandler }) {
         }
       >
         {pickup.report ? 'Update Report' : 'Submit Report'}
+      </Button>
+      <Spacer height={32} />
+      <Button
+        type="tertiary"
+        color="white"
+        size="large"
+        fullWidth
+        handler={() => setModal('NeedHelp')}
+      >
+        Need Help ?
       </Button>
     </main>
   )

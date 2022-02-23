@@ -95,50 +95,45 @@ export function EditLocation() {
 
   function Hours({ dayOfWeek, openTime, closeTime }) {
     return (
-      <FlexContainer>
-        <FlexContainer className="Inputs" primaryAlign="start">
-          <Input
-            type="select"
-            element_id="day_of_week"
-            value={dayOfWeek}
-            onSuggestionClick={e => {
-              handleChangeTimeSlot(dayOfWeek, openTime, closeTime, e)
-            }}
-            suggestions={DAYS}
-            label={'Choose Day of Week'}
-          />
-          <Input
-            type="select"
-            element_id="time_open"
-            value={openTime}
-            onSuggestionClick={e =>
-              handleChangeTimeSlot(dayOfWeek, openTime, closeTime, e)
-            }
-            suggestions={TIMES}
-            label={'Open Time'}
-          />
-          <Input
-            type="select"
-            element_id="time_close"
-            value={closeTime}
-            onSuggestionClick={e =>
-              handleChangeTimeSlot(dayOfWeek, openTime, closeTime, e)
-            }
-            suggestions={TIMES.slice(TIMES.indexOf(openTime) + 1)}
-            label={'Close Time'}
-          />
-        </FlexContainer>
-        <FlexContainer primaryAlign="end">
-          <Button
-            type="secondary"
-            size="medium"
-            color="white"
-            classlist={['Input']}
-            handler={() => handleChangeTimeSlot(dayOfWeek, openTime, closeTime)}
-          >
-            Delete TimeSlot
-          </Button>
-        </FlexContainer>
+      <FlexContainer className="EditLocation-hours">
+        <Input
+          type="select"
+          element_id="day_of_week"
+          value={DAYS[dayOfWeek]}
+          onSuggestionClick={e => {
+            handleChangeTimeSlot(dayOfWeek, openTime, closeTime, e)
+          }}
+          suggestions={DAYS}
+          label="Day of Week"
+        />
+        <Input
+          type="select"
+          element_id="time_open"
+          value={openTime}
+          onSuggestionClick={e =>
+            handleChangeTimeSlot(dayOfWeek, openTime, closeTime, e)
+          }
+          suggestions={TIMES}
+          label={'Open Time'}
+        />
+        <Input
+          type="select"
+          element_id="time_close"
+          value={closeTime}
+          onSuggestionClick={e =>
+            handleChangeTimeSlot(dayOfWeek, openTime, closeTime, e)
+          }
+          suggestions={TIMES.slice(TIMES.indexOf(openTime) + 1)}
+          label="Close Time"
+        />
+        <Button
+          type="secondary"
+          size="medium"
+          color="white"
+          handler={() => handleChangeTimeSlot(dayOfWeek, openTime, closeTime)}
+        >
+          x
+        </Button>
       </FlexContainer>
     )
   }
@@ -154,7 +149,11 @@ export function EditLocation() {
       setFormData({
         ...formData,
         hours: formData.hours.map((hour, index) =>
-          index === alter ? { ...hour, [e.target.id]: e.target.value } : hour
+          index === alter
+            ? e.target.id === 'day_of_week'
+              ? { ...hour, [e.target.id]: DAYS.indexOf(e.target.value) }
+              : { ...hour, [e.target.id]: e.target.value }
+            : hour
         ),
       })
     } else {
@@ -244,7 +243,7 @@ export function EditLocation() {
             onChange={handleChange}
           />
           <Text type="section-header" color="white" shadow>
-            Time Windows
+            Open Hours
           </Text>
           <Spacer height={15} />
           {formData.hours.map((hour, index) => {
@@ -257,6 +256,7 @@ export function EditLocation() {
               />
             )
           })}
+          <Spacer height={16} />
           <div id="EditLocation-buttons">
             <Button
               type="primary"
@@ -266,9 +266,9 @@ export function EditLocation() {
                   hours: [
                     ...formData.hours,
                     {
-                      day_of_week: 'Sunday',
-                      time_open: '8:00',
-                      time_close: '20:00',
+                      day_of_week: null,
+                      time_open: null,
+                      time_close: null,
                     },
                   ],
                 })
