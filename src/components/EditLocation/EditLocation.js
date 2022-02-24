@@ -67,6 +67,7 @@ export function EditLocation() {
           id: new_location_id,
           organization_id,
           ...formData,
+          hours: checkMonToFriday(),
           contact_phone: removeSpecialCharacters(formData.contact_phone || ''),
           timestamp_created: location.timestamp_created || createTimestamp(),
           timestamp_updated: createTimestamp(),
@@ -77,7 +78,6 @@ export function EditLocation() {
       }
     }
   }
-
   async function handleDelete() {
     if (
       window.confirm(`Are you sure you want to delete ${location.address1}?`)
@@ -162,6 +162,33 @@ export function EditLocation() {
         hours: formData.hours.filter((element, index) => index !== alter),
       })
     }
+  }
+
+  function checkMonToFriday() {
+    const indexOfMonFriday = formData.hours.findIndex(
+      hour => hour.day_of_week === 7
+    )
+    if (indexOfMonFriday !== -1) {
+      const open = formData.hours[indexOfMonFriday].time_open
+      const close = formData.hours[indexOfMonFriday].time_close
+      const hours = []
+      setFormData({
+        ...formData,
+        hours: formData.hours.splice(indexOfMonFriday, 1),
+      })
+      for (let i = 1; i <= 5; i++) {
+        hours.push({
+          day_of_week: i,
+          time_open: open,
+          time_close: close,
+        })
+      }
+      const newHours = formData.hours.concat(hours)
+
+      console.log('After', newHours)
+      return newHours
+    }
+    return formData.hours
   }
 
   return !location || !organization ? (
